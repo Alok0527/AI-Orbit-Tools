@@ -1,0 +1,10 @@
+
+> ai-orbit-tools@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.25
+   - Local:        http://localhost:3001
+   - Network:      http://172.16.0.2:3001
+   - Environments: .env.local, .env
+
+ ✓ Starting...

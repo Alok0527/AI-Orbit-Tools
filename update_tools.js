@@ -1,0 +1,1 @@
+﻿const fs = require('fs'); let c = fs.readFileSync('src/data/tools.ts', 'utf8'); c = c.replace(/slug:\s*'([^']+)',([\s\S]*?)logo:\s*'[^']+'/g, 'slug: \'' + String.fromCharCode(36) + '1\',' + String.fromCharCode(36) + '2logo: \'/tools/' + String.fromCharCode(36) + '1.svg\''); fs.writeFileSync('src/data/tools.ts', c);

@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reviews       Review[]
+  savedTools    SavedTool[]
+  submissions   ToolSubmission[]
+}
+
+model Tool {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  name            String
+  description     String
+  longDescription String?   @db.Text
+  category        String
+  pricing         String    @default("free")
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  logo            String?
+  website         String?
+  features        String[]  @default([])
+  tags            String[]  @default([])
+  screenshots     String[]  @default([])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  reviews         Review[]
+  savedBy         SavedTool[]
+  submittedBy     String?
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  toolCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  toolId    String
+  userId    String
+  rating    Int
+  content   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  tool      Tool     @relation(fields: [toolId], references: [id])
+  @@unique([toolId, userId])
+}
+
+model SavedTool {
+  id        String   @id @default(cuid())
+  toolId    String
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  tool      Tool     @relation(fields: [toolId], references: [id])
+  @@unique([toolId, userId])
+}
+
+model ToolSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  website     String?
+  description String?
+  category    String?
+  pricing     String?  @default("free")
+  tags        String[] @default([])
+  logoUrl     String?
+  status      String   @default("pending")
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
